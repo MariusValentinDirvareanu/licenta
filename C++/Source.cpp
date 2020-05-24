@@ -167,29 +167,26 @@ void ShiftRows(unsigned char *state)
 	tmp[2] = state[10];
 	tmp[3] = state[15];*/
 
-	swap(state[1],state[5]);
-	swap(state[2],state[10]);
-	swap(state[3],state[15]);
+	swap(state[1], state[5]);
+	swap(state[2], state[10]);
+	swap(state[3], state[15]);
 
-
-	
 	/*tmp[4] = state[4];
 	tmp[5] = state[9];
 	tmp[6] = state[14];
 	tmp[7] = state[3];*/
 
-
-	swap(state[5],state[9]);
-	swap(state[6],state[14]);
-	swap(state[7],state[15]);
+	swap(state[5], state[9]);
+	swap(state[6], state[14]);
+	swap(state[7], state[15]);
 
 	/*tmp[8] = state[8];
 	tmp[9] = state[13];
 	tmp[10] = state[2];
 	tmp[11] = state[7];*/
 
-	swap(state[9],state[13]);
-	swap(state[11],state[15]);
+	swap(state[9], state[13]);
+	swap(state[11], state[15]);
 
 	/*tmp[12] = state[12];
 	tmp[13] = state[1];
