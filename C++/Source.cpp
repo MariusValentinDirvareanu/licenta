@@ -242,10 +242,6 @@ void MixColumns(unsigned char *state)
 
 void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 {
-	/*for (int i = 0; i < 16; ++i)
-	{
-		state[i] ^= roundKey[i];
-	}*/
 	state[0] ^= roundKey[0];
 	state[1] ^= roundKey[1];
 	state[2] ^= roundKey[2];
@@ -270,33 +266,34 @@ void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 {
 
-	unsigned char state[16];
+	//unsigned char state[16];
 	// Inutil, inlocuit cu memcpy
 	// TODO : Scoate-l de tot
 	/*for (int i = 0; i < 16; ++i)
 	{
 		state[i] = mesaj[i];
 	}*/
-	memcpy(&state, mesaj, sizeof(state));
+	//memcpy(&state, mesaj, sizeof(state));
+	// S-a scos state
 
 	int numarRunde = 9;
 	unsigned char expKeys[176];
 
 	expandareCheie(cheie, expKeys);
-	AddRoundKey(state, cheie);
+	AddRoundKey(mesaj, cheie);
 
 	for (int i = 0; i < numarRunde; ++i)
 	{
-		SubBytes(state);
-		ShiftRows(state);
-		MixColumns(state);
-		AddRoundKey(state, expKeys + (16 * (i + 1)));
+		SubBytes(mesaj);
+		ShiftRows(mesaj);
+		MixColumns(mesaj);
+		AddRoundKey(mesaj, expKeys + (16 * (i + 1)));
 	}
 
 	// Runda finala
-	SubBytes(state);
-	ShiftRows(state);
-	AddRoundKey(state, expKeys + 160);
+	SubBytes(mesaj);
+	ShiftRows(mesaj);
+	AddRoundKey(mesaj, expKeys + 160);
 
 	// Inutil, inlocuit cu memcpy
 	// TODO : Scoate-l de tot
@@ -304,7 +301,7 @@ void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 	{
 		mesaj[i] = state[i];
 	}*/
-	memcpy(mesaj, &state, sizeof(state));
+	//memcpy(mesaj, &state, sizeof(state));
 }
 
 void PrintHex(unsigned char x)
