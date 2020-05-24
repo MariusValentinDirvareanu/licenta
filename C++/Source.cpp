@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstring>
 
 using namespace std;
 
@@ -107,28 +106,55 @@ void expandareCheie(unsigned char *inputKey, unsigned char *expKeys)
 
 	while (bytesGenerated < 176)
 	{
-		for (int i = 0; i < 4; ++i)
+		/*for (int i = 0; i < 4; ++i)
 		{
 			temp[i] = expKeys[i + bytesGenerated - 4];
-		}
+		}*/
+		temp[0] = expKeys[0 + bytesGenerated - 4];
+		temp[1] = expKeys[1 + bytesGenerated - 4];
+		temp[2] = expKeys[2 + bytesGenerated - 4];
+		temp[3] = expKeys[3 + bytesGenerated - 4];
 		if (bytesGenerated % 16 == 0)
 		{
 			KeyExpansionCore(temp, rconIteration++);
 		}
-		for (unsigned char a = 0; a < 4; ++a)
+		/*for (unsigned char a = 0; a < 4; ++a)
 		{
 			expKeys[bytesGenerated] = expKeys[bytesGenerated - 16] ^ temp[a];
 			bytesGenerated++;
-		}
+		}*/
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[0];
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[1];
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[2];
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[3];
 	}
 }
 
 void SubBytes(unsigned char *state)
 {
-	for (int i = 0; i < 16; ++i)
+	/*for (int i = 0; i < 16; ++i)
 	{
 		state[i] = s_box[state[i]];
-	}
+	}*/
+	state[0] = s_box[state[0]];
+	state[1] = s_box[state[1]];
+	state[2] = s_box[state[2]];
+	state[3] = s_box[state[3]];
+
+	state[4] = s_box[state[4]];
+	state[5] = s_box[state[5]];
+	state[6] = s_box[state[6]];
+	state[7] = s_box[state[7]];
+
+	state[8] = s_box[state[8]];
+	state[9] = s_box[state[9]];
+	state[10] = s_box[state[10]];
+	state[11] = s_box[state[11]];
+
+	state[12] = s_box[state[12]];
+	state[13] = s_box[state[13]];
+	state[14] = s_box[state[14]];
+	state[15] = s_box[state[15]];
 }
 
 // TODO : Incearca sa faci cu swap
@@ -215,10 +241,29 @@ void MixColumns(unsigned char *state)
 
 void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 {
-	for (int i = 0; i < 16; ++i)
+	/*for (int i = 0; i < 16; ++i)
 	{
 		state[i] ^= roundKey[i];
-	}
+	}*/
+	state[0] ^= roundKey[0];
+	state[1] ^= roundKey[1];
+	state[2] ^= roundKey[2];
+	state[3] ^= roundKey[3];
+
+	state[4] ^= roundKey[4];
+	state[5] ^= roundKey[5];
+	state[6] ^= roundKey[6];
+	state[7] ^= roundKey[7];
+
+	state[8] ^= roundKey[8];
+	state[9] ^= roundKey[9];
+	state[10] ^= roundKey[10];
+	state[11] ^= roundKey[11];
+
+	state[12] ^= roundKey[12];
+	state[13] ^= roundKey[13];
+	state[14] ^= roundKey[14];
+	state[15] ^= roundKey[15];
 }
 
 void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
