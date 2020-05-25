@@ -282,6 +282,7 @@ int main()
 		PrintHex(mesajCorectat[i]);
 		cout << " ";
 	}
+	cout << '\n';
 	delete[] mesajCorectat;
 
 	return 0;
