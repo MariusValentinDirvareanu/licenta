@@ -94,28 +94,29 @@ void KeyExpansionCore(unsigned char *in, unsigned char i)
 	in[0] ^= rcon[i];
 }
 
-void expandareCheie(unsigned char *cheieOriginala, unsigned char *expKeys)
+void expandareCheie(unsigned char *inputKey, unsigned char *expKeys)
 {
-	memcpy(expKeys, cheieOriginala, 24);
+	int bytesGenerated = 24;
+	memcpy(expKeys, inputKey, 24);
+	int rconIteration = 1;
+	unsigned char temp[4];
 
-	int bytesGenerati = 24;
-	int iteratii_rcon = 1;
-	unsigned char temporar[4];
-
-	while (bytesGenerati < 312)
+	while (bytesGenerated < 208)
 	{
-		temporar[0] = expKeys[bytesGenerati - 4];
-		temporar[1] = expKeys[bytesGenerati - 3];
-		temporar[2] = expKeys[bytesGenerati - 2];
-		temporar[3] = expKeys[bytesGenerati - 1];
-		if (bytesGenerati % 24 == 0)
+		temp[0] = expKeys[bytesGenerated - 4];
+		temp[1] = expKeys[bytesGenerated - 3];
+		temp[2] = expKeys[bytesGenerated - 2];
+		temp[3] = expKeys[bytesGenerated - 1];
+
+		if (bytesGenerated % 24 == 0)
 		{
-			KeyExpansionCore(temporar, iteratii_rcon++);
+			KeyExpansionCore(temp, rconIteration++);
 		}
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[0];
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[1];
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[2];
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[3];
+
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 24] ^ temp[0];
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 24] ^ temp[1];
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 24] ^ temp[2];
+		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 24] ^ temp[3];
 	}
 }
 
@@ -207,7 +208,7 @@ void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 {
 	int numarRunde = 11;
-	unsigned char expKeys[312];
+	unsigned char expKeys[208];
 
 	expandareCheie(cheie, expKeys);
 	AddRoundKey(mesaj, cheie);
@@ -217,13 +218,13 @@ void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 		SubstitutieBytes(mesaj);
 		ShiftRows(mesaj);
 		MixColumns(mesaj);
-		AddRoundKey(mesaj, expKeys + (24 * (i + 1)));
+		AddRoundKey(mesaj, expKeys + (16 * (i + 1)));
 	}
 
 	// Runda finala
 	SubstitutieBytes(mesaj);
 	ShiftRows(mesaj);
-	AddRoundKey(mesaj, expKeys + 288);
+	AddRoundKey(mesaj, expKeys + 16 * 12);
 }
 
 void PrintHex(unsigned char x)
