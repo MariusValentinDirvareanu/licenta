@@ -95,11 +95,6 @@ void expandareCheie(unsigned char *inputKey, unsigned char *expKeys)
 {
 	// sizeof(unsigned char)=1
 	memcpy(expKeys, inputKey, 16);
-	// Inutil
-	/*for (int i = 0; i < 16; ++i)
-	{
-		expKeys[i] = inputKey[i];
-	}*/
 
 	int bytesGenerated = 16;
 	int rconIteration = 1;
@@ -107,23 +102,14 @@ void expandareCheie(unsigned char *inputKey, unsigned char *expKeys)
 
 	while (bytesGenerated < 176)
 	{
-		/*for (int i = 0; i < 4; ++i)
-		{
-			temp[i] = expKeys[i + bytesGenerated - 4];
-		}*/
-		temp[0] = expKeys[0 + bytesGenerated - 4];
-		temp[1] = expKeys[1 + bytesGenerated - 4];
-		temp[2] = expKeys[2 + bytesGenerated - 4];
-		temp[3] = expKeys[3 + bytesGenerated - 4];
+		temp[0] = expKeys[bytesGenerated - 4];
+		temp[1] = expKeys[bytesGenerated - 3];
+		temp[2] = expKeys[bytesGenerated - 2];
+		temp[3] = expKeys[bytesGenerated - 1];
 		if (bytesGenerated % 16 == 0)
 		{
 			KeyExpansionCore(temp, rconIteration++);
 		}
-		/*for (unsigned char a = 0; a < 4; ++a)
-		{
-			expKeys[bytesGenerated] = expKeys[bytesGenerated - 16] ^ temp[a];
-			bytesGenerated++;
-		}*/
 		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[0];
 		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[1];
 		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[2];
@@ -133,10 +119,6 @@ void expandareCheie(unsigned char *inputKey, unsigned char *expKeys)
 
 void SubBytes(unsigned char *state)
 {
-	/*for (int i = 0; i < 16; ++i)
-	{
-		state[i] = s_box[state[i]];
-	}*/
 	state[0] = s_box[state[0]];
 	state[1] = s_box[state[1]];
 	state[2] = s_box[state[2]];
@@ -158,51 +140,16 @@ void SubBytes(unsigned char *state)
 	state[15] = s_box[state[15]];
 }
 
-// TODO : Incearca sa faci cu swap
 void ShiftRows(unsigned char *state)
 {
-	/*unsigned char tmp[16];
-	tmp[0] = state[0];
-	tmp[1] = state[5];
-	tmp[2] = state[10];
-	tmp[3] = state[15];*/
-
 	swap(state[1], state[5]);
 	swap(state[2], state[10]);
 	swap(state[3], state[15]);
-
-	/*tmp[4] = state[4];
-	tmp[5] = state[9];
-	tmp[6] = state[14];
-	tmp[7] = state[3];*/
-
 	swap(state[5], state[9]);
 	swap(state[6], state[14]);
 	swap(state[7], state[15]);
-
-	/*tmp[8] = state[8];
-	tmp[9] = state[13];
-	tmp[10] = state[2];
-	tmp[11] = state[7];*/
-
 	swap(state[9], state[13]);
 	swap(state[11], state[15]);
-
-	/*tmp[12] = state[12];
-	tmp[13] = state[1];
-	tmp[14] = state[6];
-	tmp[15] = state[11];
-
-
-
-
-
-	// Inutil, inlocuit cu memcpy
-	for (int i = 0; i < 16; ++i)
-	{
-		state[i] = tmp[i];
-	}
-	memcpy(state, &tmp, sizeof(tmp));*/
 }
 
 void MixColumns(unsigned char *state)
@@ -229,11 +176,6 @@ void MixColumns(unsigned char *state)
 	tmp[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]);
 	tmp[15] = (unsigned char)(mul3[state[12]] ^ state[13] ^ state[14] ^ mul2[state[15]]);
 
-	// Inutil, inlocuit cu memcpy
-	/*for (int i = 0; i < 16; ++i)
-	{
-		state[i] = tmp[i];
-	}*/
 	memcpy(state, &tmp, sizeof(tmp));
 }
 
@@ -262,17 +204,6 @@ void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 
 void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 {
-
-	//unsigned char state[16];
-	// Inutil, inlocuit cu memcpy
-	// TODO : Scoate-l de tot
-	/*for (int i = 0; i < 16; ++i)
-	{
-		state[i] = mesaj[i];
-	}*/
-	//memcpy(&state, mesaj, sizeof(state));
-	// S-a scos state
-
 	int numarRunde = 9;
 	unsigned char expKeys[176];
 
@@ -291,14 +222,6 @@ void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 	SubBytes(mesaj);
 	ShiftRows(mesaj);
 	AddRoundKey(mesaj, expKeys + 160);
-
-	// Inutil, inlocuit cu memcpy
-	// TODO : Scoate-l de tot
-	/*for (int i = 0; i < 16; ++i)
-	{
-		mesaj[i] = state[i];
-	}*/
-	//memcpy(mesaj, &state, sizeof(state));
 }
 
 void PrintHex(unsigned char x)
