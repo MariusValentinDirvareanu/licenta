@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstring>
 
+///TODO: Decriptate + chei de 192 si 256 biti
+
 using namespace std;
 
 unsigned char s_box[256] = {
@@ -78,6 +80,7 @@ unsigned char rcon[256] = {
 void KeyExpansionCore(unsigned char *in, unsigned char i)
 {
 	// Rotatie stanga
+	// Simplifica
 	unsigned int *q = (unsigned int *)in;
 	*q = (*q >> 8) | ((*q & 0xff) << 24);
 
@@ -91,33 +94,32 @@ void KeyExpansionCore(unsigned char *in, unsigned char i)
 	in[0] ^= rcon[i];
 }
 
-void expandareCheie(unsigned char *inputKey, unsigned char *expKeys)
+void expandareCheie(unsigned char *cheieOriginala, unsigned char *expKeys)
 {
-	// sizeof(unsigned char)=1
-	memcpy(expKeys, inputKey, 16);
+	memcpy(expKeys, cheieOriginala, 16);
 
-	int bytesGenerated = 16;
-	int rconIteration = 1;
-	unsigned char temp[4];
+	int bytesGenerati = 16;
+	int iteratii_rcon = 1;
+	unsigned char temporar[4];
 
-	while (bytesGenerated < 176)
+	while (bytesGenerati < 176)
 	{
-		temp[0] = expKeys[bytesGenerated - 4];
-		temp[1] = expKeys[bytesGenerated - 3];
-		temp[2] = expKeys[bytesGenerated - 2];
-		temp[3] = expKeys[bytesGenerated - 1];
-		if (bytesGenerated % 16 == 0)
+		temporar[0] = expKeys[bytesGenerati - 4];
+		temporar[1] = expKeys[bytesGenerati - 3];
+		temporar[2] = expKeys[bytesGenerati - 2];
+		temporar[3] = expKeys[bytesGenerati - 1];
+		if (bytesGenerati % 16 == 0)
 		{
-			KeyExpansionCore(temp, rconIteration++);
+			KeyExpansionCore(temporar, iteratii_rcon++);
 		}
-		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[0];
-		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[1];
-		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[2];
-		expKeys[bytesGenerated++] = expKeys[bytesGenerated - 16] ^ temp[3];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[0];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[1];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[2];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[3];
 	}
 }
 
-void SubBytes(unsigned char *state)
+void SubstitutieBytes(unsigned char *state)
 {
 	state[0] = s_box[state[0]];
 	state[1] = s_box[state[1]];
@@ -154,29 +156,29 @@ void ShiftRows(unsigned char *state)
 
 void MixColumns(unsigned char *state)
 {
-	unsigned char tmp[16];
+	unsigned char temporar[16];
 
-	tmp[0] = (unsigned char)(mul2[state[0]] ^ mul3[state[1]] ^ state[2] ^ state[3]);
-	tmp[1] = (unsigned char)(state[0] ^ mul2[state[1]] ^ mul3[state[2]] ^ state[3]);
-	tmp[2] = (unsigned char)(state[0] ^ state[1] ^ mul2[state[2]] ^ mul3[state[3]]);
-	tmp[3] = (unsigned char)(mul3[state[0]] ^ state[1] ^ state[2] ^ mul2[state[3]]);
+	temporar[0] = (unsigned char)(mul2[state[0]] ^ mul3[state[1]] ^ state[2] ^ state[3]);
+	temporar[1] = (unsigned char)(state[0] ^ mul2[state[1]] ^ mul3[state[2]] ^ state[3]);
+	temporar[2] = (unsigned char)(state[0] ^ state[1] ^ mul2[state[2]] ^ mul3[state[3]]);
+	temporar[3] = (unsigned char)(mul3[state[0]] ^ state[1] ^ state[2] ^ mul2[state[3]]);
 
-	tmp[4] = (unsigned char)(mul2[state[4]] ^ mul3[state[5]] ^ state[6] ^ state[7]);
-	tmp[5] = (unsigned char)(state[4] ^ mul2[state[5]] ^ mul3[state[6]] ^ state[7]);
-	tmp[6] = (unsigned char)(state[4] ^ state[5] ^ mul2[state[6]] ^ mul3[state[7]]);
-	tmp[7] = (unsigned char)(mul3[state[4]] ^ state[5] ^ state[6] ^ mul2[state[7]]);
+	temporar[4] = (unsigned char)(mul2[state[4]] ^ mul3[state[5]] ^ state[6] ^ state[7]);
+	temporar[5] = (unsigned char)(state[4] ^ mul2[state[5]] ^ mul3[state[6]] ^ state[7]);
+	temporar[6] = (unsigned char)(state[4] ^ state[5] ^ mul2[state[6]] ^ mul3[state[7]]);
+	temporar[7] = (unsigned char)(mul3[state[4]] ^ state[5] ^ state[6] ^ mul2[state[7]]);
 
-	tmp[8] = (unsigned char)(mul2[state[8]] ^ mul3[state[9]] ^ state[10] ^ state[11]);
-	tmp[9] = (unsigned char)(state[8] ^ mul2[state[9]] ^ mul3[state[10]] ^ state[11]);
-	tmp[10] = (unsigned char)(state[8] ^ state[9] ^ mul2[state[10]] ^ mul3[state[11]]);
-	tmp[11] = (unsigned char)(mul3[state[8]] ^ state[9] ^ state[10] ^ mul2[state[11]]);
+	temporar[8] = (unsigned char)(mul2[state[8]] ^ mul3[state[9]] ^ state[10] ^ state[11]);
+	temporar[9] = (unsigned char)(state[8] ^ mul2[state[9]] ^ mul3[state[10]] ^ state[11]);
+	temporar[10] = (unsigned char)(state[8] ^ state[9] ^ mul2[state[10]] ^ mul3[state[11]]);
+	temporar[11] = (unsigned char)(mul3[state[8]] ^ state[9] ^ state[10] ^ mul2[state[11]]);
 
-	tmp[12] = (unsigned char)(mul2[state[12]] ^ mul3[state[13]] ^ state[14] ^ state[15]);
-	tmp[13] = (unsigned char)(state[12] ^ mul2[state[13]] ^ mul3[state[14]] ^ state[15]);
-	tmp[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]);
-	tmp[15] = (unsigned char)(mul3[state[12]] ^ state[13] ^ state[14] ^ mul2[state[15]]);
+	temporar[12] = (unsigned char)(mul2[state[12]] ^ mul3[state[13]] ^ state[14] ^ state[15]);
+	temporar[13] = (unsigned char)(state[12] ^ mul2[state[13]] ^ mul3[state[14]] ^ state[15]);
+	temporar[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]);
+	temporar[15] = (unsigned char)(mul3[state[12]] ^ state[13] ^ state[14] ^ mul2[state[15]]);
 
-	memcpy(state, &tmp, sizeof(tmp));
+	memcpy(state, &temporar, sizeof(temporar));
 }
 
 void AddRoundKey(unsigned char *state, unsigned char *roundKey)
@@ -212,14 +214,14 @@ void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 
 	for (int i = 0; i < numarRunde; ++i)
 	{
-		SubBytes(mesaj);
+		SubstitutieBytes(mesaj);
 		ShiftRows(mesaj);
 		MixColumns(mesaj);
 		AddRoundKey(mesaj, expKeys + (16 * (i + 1)));
 	}
 
 	// Runda finala
-	SubBytes(mesaj);
+	SubstitutieBytes(mesaj);
 	ShiftRows(mesaj);
 	AddRoundKey(mesaj, expKeys + 160);
 }
@@ -249,38 +251,38 @@ int main()
 	unsigned char mesaj[] = "Acesta este mesajul meu.";
 	unsigned char cheie[17] = "u43x2l6gjng24edf";
 	cout << mesaj << '\n';
-	int originalLen = (int)(strlen((const char *)mesaj));
-	int lenOfPaddedMessage = originalLen;
-	if (lenOfPaddedMessage % 16 != 0)
+	int lungimeMesajOriginala = (int)(strlen((const char *)mesaj));
+	int lungimeMesajCorectata = lungimeMesajOriginala;
+	if (lungimeMesajCorectata % 16 != 0)
 	{
-		lenOfPaddedMessage = (lenOfPaddedMessage / 16 + 1) * 16;
+		lungimeMesajCorectata = (lungimeMesajCorectata / 16 + 1) * 16;
 	}
-	unsigned char *paddedMessage = new unsigned char[lenOfPaddedMessage];
-	for (int i = 0; i < lenOfPaddedMessage; ++i)
+	unsigned char *mesajCorectat = new unsigned char[lungimeMesajCorectata];
+	for (int i = 0; i < lungimeMesajCorectata; ++i)
 	{
-		if (i >= originalLen)
+		if (i >= lungimeMesajOriginala)
 		{
-			paddedMessage[i] = 0;
+			mesajCorectat[i] = 0;
 		}
 		else
 		{
-			paddedMessage[i] = mesaj[i];
+			mesajCorectat[i] = mesaj[i];
 		}
 	}
 
-	for (int i = 0; i < lenOfPaddedMessage; i += 16)
+	for (int i = 0; i < lungimeMesajCorectata; i += 16)
 	{
-		criptareMesaj(paddedMessage + i, cheie);
+		criptareMesaj(mesajCorectat + i, cheie);
 	}
 
 	cout << "\n Mesaj criptat:\n";
 
-	for (int i = 0; i < lenOfPaddedMessage; ++i)
+	for (int i = 0; i < lungimeMesajCorectata; ++i)
 	{
-		PrintHex(paddedMessage[i]);
+		PrintHex(mesajCorectat[i]);
 		cout << " ";
 	}
-	delete[] paddedMessage;
+	delete[] mesajCorectat;
 
 	return 0;
 }
