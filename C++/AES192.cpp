@@ -96,26 +96,26 @@ void KeyExpansionCore(unsigned char *in, unsigned char i)
 
 void expandareCheie(unsigned char *cheieOriginala, unsigned char *expKeys)
 {
-	memcpy(expKeys, cheieOriginala, 16);
+	memcpy(expKeys, cheieOriginala, 24);
 
-	int bytesGenerati = 16;
+	int bytesGenerati = 24;
 	int iteratii_rcon = 1;
 	unsigned char temporar[4];
 
-	while (bytesGenerati < 176)
+	while (bytesGenerati < 312)
 	{
 		temporar[0] = expKeys[bytesGenerati - 4];
 		temporar[1] = expKeys[bytesGenerati - 3];
 		temporar[2] = expKeys[bytesGenerati - 2];
 		temporar[3] = expKeys[bytesGenerati - 1];
-		if (bytesGenerati % 16 == 0)
+		if (bytesGenerati % 24 == 0)
 		{
 			KeyExpansionCore(temporar, iteratii_rcon++);
 		}
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[0];
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[1];
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[2];
-		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 16] ^ temporar[3];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[0];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[1];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[2];
+		expKeys[bytesGenerati++] = expKeys[bytesGenerati - 24] ^ temporar[3];
 	}
 }
 
@@ -206,8 +206,8 @@ void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 
 void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 {
-	int numarRunde = 9;
-	unsigned char expKeys[176];
+	int numarRunde = 11;
+	unsigned char expKeys[312];
 
 	expandareCheie(cheie, expKeys);
 	AddRoundKey(mesaj, cheie);
@@ -217,13 +217,13 @@ void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 		SubstitutieBytes(mesaj);
 		ShiftRows(mesaj);
 		MixColumns(mesaj);
-		AddRoundKey(mesaj, expKeys + (16 * (i + 1)));
+		AddRoundKey(mesaj, expKeys + (24 * (i + 1)));
 	}
 
 	// Runda finala
 	SubstitutieBytes(mesaj);
 	ShiftRows(mesaj);
-	AddRoundKey(mesaj, expKeys + 160);
+	AddRoundKey(mesaj, expKeys + 288);
 }
 
 void PrintHex(unsigned char x)
@@ -249,7 +249,7 @@ void PrintHex(unsigned char x)
 int main()
 {
 	unsigned char mesaj[] = "Acesta este mesajul meu.";
-	unsigned char cheie[17] = "u43x2l6gjng24edf";
+	unsigned char cheie[25] = "pyehxfiikibqunkkbwyydlqq";
 	cout << mesaj << '\n';
 	int lungimeMesajOriginala = (int)(strlen((const char *)mesaj));
 	int lungimeMesajCorectata = lungimeMesajOriginala;
