@@ -248,7 +248,7 @@ void PrintHex(unsigned char x)
 
 int main()
 {
-	unsigned char mesaj[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean accumsan eros sit amet metus mattis placerat. Duis eu sodales ligula. Morbi scelerisque, mauris ut maximus consectetur, erat mi sagittis orci, sed sodales quam orci iaculis enim. Fusce lacus turpis, vestibulum nec commodo at, rhoncus non dolor. Vivamus sit amet fermentum ipsum. Mauris semper odio eget odio elementum hendrerit. Mauris vel odio a massa bibendum lobortis. Sed eleifend mattis vulputate. Maecenas accumsan libero non dolor pharetra, sed gravida sapien viverra. Praesent efficitur dolor ligula, in pretium magna suscipit ac. Nam rutrum mi vel viverra dignissim. Nullam ac consequat nisl. Curabitur nisi.";
+	unsigned char mesaj[] = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 	unsigned char cheie[17] = "u43x2l6gjng24edf";
 	cout << mesaj << '\n';
 	int lungimeMesajOriginala = (int)(strlen((const char *)mesaj));
