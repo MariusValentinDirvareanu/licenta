@@ -204,10 +204,12 @@ void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 	state[15] ^= roundKey[15];
 }
 
-void criptareMesaj(unsigned char *mesaj, unsigned char *cheie, unsigned char *expKeys)
+void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
 {
 	int numarRunde = 9;
+	unsigned char expKeys[176];
 
+	expandareCheie(cheie, expKeys);
 	AddRoundKey(mesaj, cheie);
 
 	for (int i = 0; i < numarRunde; ++i)
@@ -263,9 +265,6 @@ int main()
 		lungimeMesajCorectata = (lungimeMesajCorectata / 16 + 1) * 16;
 	}
 	unsigned char *mesajCorectat = new unsigned char[lungimeMesajCorectata];
-	unsigned char expKeys[176];
-
-	expandareCheie(cheie, expKeys);
 	for (int i = 0; i < lungimeMesajCorectata; ++i)
 	{
 		if (i >= lungimeMesajOriginala)
@@ -280,7 +279,7 @@ int main()
 
 	for (int i = 0; i < lungimeMesajCorectata; i += 16)
 	{
-		criptareMesaj(mesajCorectat + i, cheie, expKeys);
+		criptareMesaj(mesajCorectat + i, cheie);
 	}
 
 	cout << "\n Mesaj criptat:\n";
