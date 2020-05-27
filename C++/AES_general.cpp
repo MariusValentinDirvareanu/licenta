@@ -277,20 +277,20 @@ int main()
     unsigned char *expKeys = nullptr;
     if (nivel == 128)
     {
-        cheie = new unsigned char[17];
-        memcpy(cheie,"u43x2l6gjng24edf",17);
+        cheie = new unsigned char[16];
+        memcpy(cheie,"u43x2l6gjng24edf",16);
         expKeys = new unsigned char[176];
     }
     if (nivel == 192)
     {
-        cheie = new unsigned char[25];
-        memcpy(cheie,"pyehxfiikibqunkkbwyydlqq",25);
+        cheie = new unsigned char[24];
+        memcpy(cheie,"pyehxfiikibqunkkbwyydlqq",24);
         expKeys = new unsigned char[208];
     }
     if (nivel == 256)
     {
-        cheie = new unsigned char[33];
-        memcpy(cheie,"bstipsymvkpascpmdqahvtdwusnhzexv",33);
+        cheie = new unsigned char[32];
+        memcpy(cheie,"bstipsymvkpascpmdqahvtdwusnhzexv",32);
         expKeys = new unsigned char[240];
     }
     expandareCheie(cheie, expKeys, nivel);
