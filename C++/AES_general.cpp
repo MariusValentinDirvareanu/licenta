@@ -272,22 +272,25 @@ void PrintHex(unsigned char x)
 int main()
 {
     unsigned char mesaj[] = "For AES, NIST selected three members of the Rijndael family, each with a block size of 128 bits, but three different key lengths: 128, 192 and 256 bits.";
-    unsigned nivel = 192;
+    unsigned nivel = 256;
     unsigned char *cheie = nullptr;
     unsigned char *expKeys = nullptr;
     if (nivel == 128)
     {
-        cheie = new unsigned char[17]{"u43x2l6gjng24edf"};
+        cheie = new unsigned char[17];
+        memcpy(cheie,"u43x2l6gjng24edf",17);
         expKeys = new unsigned char[176];
     }
     if (nivel == 192)
     {
-        cheie = new unsigned char[25]{"pyehxfiikibqunkkbwyydlqq"};
+        cheie = new unsigned char[25];
+        memcpy(cheie,"pyehxfiikibqunkkbwyydlqq",25);
         expKeys = new unsigned char[208];
     }
     if (nivel == 256)
     {
-        cheie = new unsigned char[33]{"bstipsymvkpascpmdqahvtdwusnhzexv"};
+        cheie = new unsigned char[33];
+        memcpy(cheie,"bstipsymvkpascpmdqahvtdwusnhzexv",33);
         expKeys = new unsigned char[240];
     }
     expandareCheie(cheie, expKeys, nivel);
