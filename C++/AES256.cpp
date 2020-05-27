@@ -204,12 +204,10 @@ void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 	state[15] ^= roundKey[15];
 }
 
-void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
+void criptareMesaj(unsigned char *mesaj, unsigned char *cheie, unsigned char *expKeys)
 {
 	int numarRunde = 13;
-	unsigned char expKeys[240];
 
-	expandareCheie(cheie, expKeys);
 	AddRoundKey(mesaj, cheie);
 
 	for (int i = 0; i < numarRunde; ++i)
@@ -250,6 +248,10 @@ int main()
 {
 	unsigned char mesaj[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean accumsan eros sit amet metus mattis placerat. Duis eu sodales ligula. Morbi scelerisque, mauris ut maximus consectetur, erat mi sagittis orci, sed sodales quam orci iaculis enim. Fusce lacus turpis, vestibulum nec commodo at, rhoncus non dolor. Vivamus sit amet fermentum ipsum. Mauris semper odio eget odio elementum hendrerit. Mauris vel odio a massa bibendum lobortis. Sed eleifend mattis vulputate. Maecenas accumsan libero non dolor pharetra, sed gravida sapien viverra. Praesent efficitur dolor ligula, in pretium magna suscipit ac. Nam rutrum mi vel viverra dignissim. Nullam ac consequat nisl. Curabitur nisi.";
 	unsigned char cheie[33] = "bstipsymvkpascpmdqahvtdwusnhzexv";
+	unsigned char expKeys[240];
+
+	expandareCheie(cheie, expKeys);
+
 	cout << mesaj << '\n';
 	int lungimeMesajOriginala = (int)(strlen((const char *)mesaj));
 	int lungimeMesajCorectata = lungimeMesajOriginala;
@@ -272,7 +274,7 @@ int main()
 
 	for (int i = 0; i < lungimeMesajCorectata; i += 16)
 	{
-		criptareMesaj(mesajCorectat + i, cheie);
+		criptareMesaj(mesajCorectat + i, cheie, expKeys);
 	}
 
 	cout << "\n Mesaj criptat:\n";

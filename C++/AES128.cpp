@@ -204,12 +204,10 @@ void AddRoundKey(unsigned char *state, unsigned char *roundKey)
 	state[15] ^= roundKey[15];
 }
 
-void criptareMesaj(unsigned char *mesaj, unsigned char *cheie)
+void criptareMesaj(unsigned char *mesaj, unsigned char *cheie, unsigned char *expKeys)
 {
 	int numarRunde = 9;
-	unsigned char expKeys[176];
 
-	expandareCheie(cheie, expKeys);
 	AddRoundKey(mesaj, cheie);
 
 	for (int i = 0; i < numarRunde; ++i)
@@ -250,6 +248,8 @@ int main()
 {
 	unsigned char mesaj[] = "For AES, NIST selected three members of the Rijndael family, each with a block size of 128 bits, but three different key lengths: 128, 192 and 256 bits.";
 	unsigned char cheie[17] = "u43x2l6gjng24edf";
+	unsigned char expKeys[176];
+	expandareCheie(cheie, expKeys);
 	cout << mesaj << '\n';
 	int lungimeMesajOriginala = (int)(strlen((const char *)mesaj));
 	int lungimeMesajCorectata = lungimeMesajOriginala;
@@ -272,7 +272,7 @@ int main()
 
 	for (int i = 0; i < lungimeMesajCorectata; i += 16)
 	{
-		criptareMesaj(mesajCorectat + i, cheie);
+		criptareMesaj(mesajCorectat + i, cheie, expKeys);
 	}
 
 	cout << "\n Mesaj criptat:\n";
