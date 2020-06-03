@@ -257,6 +257,7 @@ int main()
 	{
 		lungimeMesajCorectata = (lungimeMesajCorectata / 16 + 1) * 16;
 	}
+	cout << lungimeMesajOriginala << " " << lungimeMesajCorectata << endl;
 	unsigned char *mesajCorectat = new unsigned char[lungimeMesajCorectata];
 	for (int i = 0; i < lungimeMesajCorectata; ++i)
 	{
@@ -269,6 +270,7 @@ int main()
 			mesajCorectat[i] = mesaj[i];
 		}
 	}
+	cout << mesajCorectat << endl;
 
 	for (int i = 0; i < lungimeMesajCorectata; i += 16)
 	{
