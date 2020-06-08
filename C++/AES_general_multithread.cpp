@@ -337,7 +337,7 @@ int main(int argc, char** argv)
 {
     fstream f("mesaj.txt", ios::in | ios::out | ios::ate);
     unsigned char mesaj[17];
-    unsigned nivel = 256;//atoi(argv[1]);
+    unsigned nivel = atoi(argv[1]);
     unsigned char* cheie = nullptr;
     unsigned char* expKeys = nullptr;
 
