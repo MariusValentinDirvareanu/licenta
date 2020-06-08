@@ -150,41 +150,29 @@ void expandareCheie(unsigned char* cheieOriginala, unsigned char* expKeys, unsig
 
 void SubstitutieBytes(unsigned char* state)
 {
-    thread st0([&]() {state[0] = s_box[state[0]]; });
-    thread st1([&]() {state[1] = s_box[state[1]]; });
-    thread st2([&]() {state[2] = s_box[state[2]]; });
-    thread st3([&]() {state[3] = s_box[state[3]]; });
+    thread st0([&]() {state[0] = s_box[state[0]];
+    state[1] = s_box[state[1]];
+    state[2] = s_box[state[2]];
+    state[3] = s_box[state[3]]; });
 
-    thread st4([&]() {state[4] = s_box[state[4]]; });
-    thread st5([&]() {state[5] = s_box[state[5]]; });
-    thread st6([&]() {state[6] = s_box[state[6]]; });
-    thread st7([&]() {state[7] = s_box[state[7]]; });
+    thread st1([&]() {state[4] = s_box[state[4]];
+    state[5] = s_box[state[5]];
+    state[6] = s_box[state[6]];
+    state[7] = s_box[state[7]]; });
 
-    thread st8([&]() {state[8] = s_box[state[8]]; });
-    thread st9([&]() {state[9] = s_box[state[9]]; });
-    thread st10([&]() {state[10] = s_box[state[10]]; });
-    thread st11([&]() {state[11] = s_box[state[11]]; });
+    thread st2([&]() {state[8] = s_box[state[8]];
+    state[9] = s_box[state[9]];
+    state[10] = s_box[state[10]];
+    state[11] = s_box[state[11]]; });
 
-    thread st12([&]() {state[12] = s_box[state[12]]; });
-    thread st13([&]() {state[13] = s_box[state[13]]; });
-    thread st14([&]() {state[14] = s_box[state[14]]; });
-    thread st15([&]() {state[15] = s_box[state[15]]; });
+    thread st3([&]() {state[12] = s_box[state[12]];
+    state[13] = s_box[state[13]];
+    state[14] = s_box[state[14]];
+    state[15] = s_box[state[15]]; });
     st0.join();
     st1.join();
     st2.join();
     st3.join();
-    st4.join();
-    st5.join();
-    st6.join();
-    st7.join();
-    st8.join();
-    st9.join();
-    st10.join();
-    st11.join();
-    st12.join();
-    st13.join();
-    st14.join();
-    st15.join();
 }
 
 void ShiftRows(unsigned char* state)
@@ -203,82 +191,57 @@ void MixColumns(unsigned char* state)
 {
     unsigned char temporar[16];
 
-    thread tem0([&]() {temporar[0] = (unsigned char)(mul2[state[0]] ^ mul3[state[1]] ^ state[2] ^ state[3]); });
-    thread tem1([&]() {temporar[1] = (unsigned char)(state[0] ^ mul2[state[1]] ^ mul3[state[2]] ^ state[3]); });
-    thread tem2([&]() {temporar[2] = (unsigned char)(state[0] ^ state[1] ^ mul2[state[2]] ^ mul3[state[3]]); });
-    thread tem3([&]() {temporar[3] = (unsigned char)(mul3[state[0]] ^ state[1] ^ state[2] ^ mul2[state[3]]); });
+    thread tem0([&]() {temporar[0] = (unsigned char)(mul2[state[0]] ^ mul3[state[1]] ^ state[2] ^ state[3]);
+    temporar[1] = (unsigned char)(state[0] ^ mul2[state[1]] ^ mul3[state[2]] ^ state[3]);
+    temporar[2] = (unsigned char)(state[0] ^ state[1] ^ mul2[state[2]] ^ mul3[state[3]]);
+    temporar[3] = (unsigned char)(mul3[state[0]] ^ state[1] ^ state[2] ^ mul2[state[3]]); });
 
-    thread tem4([&]() {temporar[4] = (unsigned char)(mul2[state[4]] ^ mul3[state[5]] ^ state[6] ^ state[7]); });
-    thread tem5([&]() {temporar[5] = (unsigned char)(state[4] ^ mul2[state[5]] ^ mul3[state[6]] ^ state[7]); });
-    thread tem6([&]() {temporar[6] = (unsigned char)(state[4] ^ state[5] ^ mul2[state[6]] ^ mul3[state[7]]); });
-    thread tem7([&]() {temporar[7] = (unsigned char)(mul3[state[4]] ^ state[5] ^ state[6] ^ mul2[state[7]]); });
+    thread tem1([&]() {temporar[4] = (unsigned char)(mul2[state[4]] ^ mul3[state[5]] ^ state[6] ^ state[7]);
+    temporar[5] = (unsigned char)(state[4] ^ mul2[state[5]] ^ mul3[state[6]] ^ state[7]);
+    temporar[6] = (unsigned char)(state[4] ^ state[5] ^ mul2[state[6]] ^ mul3[state[7]]);
+    temporar[7] = (unsigned char)(mul3[state[4]] ^ state[5] ^ state[6] ^ mul2[state[7]]); });
 
-    thread tem8([&]() {temporar[8] = (unsigned char)(mul2[state[8]] ^ mul3[state[9]] ^ state[10] ^ state[11]); });
-    thread tem9([&]() {temporar[9] = (unsigned char)(state[8] ^ mul2[state[9]] ^ mul3[state[10]] ^ state[11]); });
-    thread tem10([&]() {temporar[10] = (unsigned char)(state[8] ^ state[9] ^ mul2[state[10]] ^ mul3[state[11]]); });
-    thread tem11([&]() {temporar[11] = (unsigned char)(mul3[state[8]] ^ state[9] ^ state[10] ^ mul2[state[11]]); });
+    thread tem2([&]() {temporar[8] = (unsigned char)(mul2[state[8]] ^ mul3[state[9]] ^ state[10] ^ state[11]);
+    temporar[9] = (unsigned char)(state[8] ^ mul2[state[9]] ^ mul3[state[10]] ^ state[11]);
+    temporar[10] = (unsigned char)(state[8] ^ state[9] ^ mul2[state[10]] ^ mul3[state[11]]);
+    temporar[11] = (unsigned char)(mul3[state[8]] ^ state[9] ^ state[10] ^ mul2[state[11]]); });
 
-    thread tem12([&]() {temporar[12] = (unsigned char)(mul2[state[12]] ^ mul3[state[13]] ^ state[14] ^ state[15]); });
-    thread tem13([&]() {temporar[13] = (unsigned char)(state[12] ^ mul2[state[13]] ^ mul3[state[14]] ^ state[15]); });
-    thread tem14([&]() {temporar[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]); });
-    thread tem15([&]() {temporar[15] = (unsigned char)(mul3[state[12]] ^ state[13] ^ state[14] ^ mul2[state[15]]); });
+    thread tem3([&]() {temporar[12] = (unsigned char)(mul2[state[12]] ^ mul3[state[13]] ^ state[14] ^ state[15]);
+    temporar[13] = (unsigned char)(state[12] ^ mul2[state[13]] ^ mul3[state[14]] ^ state[15]);
+    temporar[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]);
+    temporar[15] = (unsigned char)(mul3[state[12]] ^ state[13] ^ state[14] ^ mul2[state[15]]); });
     tem0.join();
     tem1.join();
     tem2.join();
     tem3.join();
-    tem4.join();
-    tem5.join();
-    tem6.join();
-    tem7.join();
-    tem8.join();
-    tem9.join();
-    tem10.join();
-    tem11.join();
-    tem12.join();
-    tem13.join();
-    tem14.join();
-    tem15.join();
-
     memcpy(state, &temporar, sizeof(temporar));
 }
 
 void AddRoundKey(unsigned char* state, unsigned char* roundKey)
 {
-    thread st0([&]() {state[0] ^= roundKey[0]; });
-    thread st1([&]() {state[1] ^= roundKey[1]; });
-    thread st2([&]() {state[2] ^= roundKey[2]; });
-    thread st3([&]() {state[3] ^= roundKey[3]; });
+    thread st0([&]() {state[0] ^= roundKey[0];
+    state[1] ^= roundKey[1];
+    state[2] ^= roundKey[2];
+    state[3] ^= roundKey[3]; });
 
-    thread st4([&]() {state[4] ^= roundKey[4]; });
-    thread st5([&]() {state[5] ^= roundKey[5]; });
-    thread st6([&]() {state[6] ^= roundKey[6]; });
-    thread st7([&]() {state[7] ^= roundKey[7]; });
+    thread st1([&]() {state[4] ^= roundKey[4];
+    state[5] ^= roundKey[5];
+    state[6] ^= roundKey[6];
+    state[7] ^= roundKey[7]; });
 
-    thread st8([&]() {state[8] ^= roundKey[8]; });
-    thread st9([&]() {state[9] ^= roundKey[9]; });
-    thread st10([&]() {state[10] ^= roundKey[10]; });
-    thread st11([&]() {state[11] ^= roundKey[11]; });
+    thread st2([&]() {state[8] ^= roundKey[8];
+    state[9] ^= roundKey[9];
+    state[10] ^= roundKey[10];
+    state[11] ^= roundKey[11]; });
 
-    thread st12([&]() {state[12] ^= roundKey[12]; });
-    thread st13([&]() {state[13] ^= roundKey[13]; });
-    thread st14([&]() {state[14] ^= roundKey[14]; });
-    thread st15([&]() {state[15] ^= roundKey[15]; });
+    thread st3([&]() {state[12] ^= roundKey[12];
+    state[13] ^= roundKey[13];
+    state[14] ^= roundKey[14];
+    state[15] ^= roundKey[15]; });
     st0.join();
     st1.join();
     st2.join();
     st3.join();
-    st4.join();
-    st5.join();
-    st6.join();
-    st7.join();
-    st8.join();
-    st9.join();
-    st10.join();
-    st11.join();
-    st12.join();
-    st13.join();
-    st14.join();
-    st15.join();
 }
 
 void criptareMesaj(unsigned char* mesaj, unsigned char* cheie, unsigned char* expKeys, unsigned nivel)
