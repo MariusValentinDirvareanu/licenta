@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
-#include <future>
+#include <thread>
 
 // Implementarea pe 128, 192 si 256
 // Se modifica variabila nivel cu valoarea dorita (128, 192, 256)
@@ -10,7 +10,7 @@ using namespace std;
 
 ofstream g("textCriptat.txt");
 
-unsigned char s_box[256] = {
+const unsigned char s_box[256] = {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
     0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
     0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
@@ -26,9 +26,9 @@ unsigned char s_box[256] = {
     0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
     0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
     0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
-    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16};
+    0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 };
 
-unsigned char mul2[] = {
+const unsigned char mul2[256] = {
     0x00, 0x02, 0x04, 0x06, 0x08, 0x0a, 0x0c, 0x0e, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e,
     0x20, 0x22, 0x24, 0x26, 0x28, 0x2a, 0x2c, 0x2e, 0x30, 0x32, 0x34, 0x36, 0x38, 0x3a, 0x3c, 0x3e,
     0x40, 0x42, 0x44, 0x46, 0x48, 0x4a, 0x4c, 0x4e, 0x50, 0x52, 0x54, 0x56, 0x58, 0x5a, 0x5c, 0x5e,
@@ -44,9 +44,9 @@ unsigned char mul2[] = {
     0x9b, 0x99, 0x9f, 0x9d, 0x93, 0x91, 0x97, 0x95, 0x8b, 0x89, 0x8f, 0x8d, 0x83, 0x81, 0x87, 0x85,
     0xbb, 0xb9, 0xbf, 0xbd, 0xb3, 0xb1, 0xb7, 0xb5, 0xab, 0xa9, 0xaf, 0xad, 0xa3, 0xa1, 0xa7, 0xa5,
     0xdb, 0xd9, 0xdf, 0xdd, 0xd3, 0xd1, 0xd7, 0xd5, 0xcb, 0xc9, 0xcf, 0xcd, 0xc3, 0xc1, 0xc7, 0xc5,
-    0xfb, 0xf9, 0xff, 0xfd, 0xf3, 0xf1, 0xf7, 0xf5, 0xeb, 0xe9, 0xef, 0xed, 0xe3, 0xe1, 0xe7, 0xe5};
+    0xfb, 0xf9, 0xff, 0xfd, 0xf3, 0xf1, 0xf7, 0xf5, 0xeb, 0xe9, 0xef, 0xed, 0xe3, 0xe1, 0xe7, 0xe5 };
 
-unsigned char mul3[] = {
+const unsigned char mul3[256] = {
     0x00, 0x03, 0x06, 0x05, 0x0c, 0x0f, 0x0a, 0x09, 0x18, 0x1b, 0x1e, 0x1d, 0x14, 0x17, 0x12, 0x11,
     0x30, 0x33, 0x36, 0x35, 0x3c, 0x3f, 0x3a, 0x39, 0x28, 0x2b, 0x2e, 0x2d, 0x24, 0x27, 0x22, 0x21,
     0x60, 0x63, 0x66, 0x65, 0x6c, 0x6f, 0x6a, 0x69, 0x78, 0x7b, 0x7e, 0x7d, 0x74, 0x77, 0x72, 0x71,
@@ -62,9 +62,9 @@ unsigned char mul3[] = {
     0x5b, 0x58, 0x5d, 0x5e, 0x57, 0x54, 0x51, 0x52, 0x43, 0x40, 0x45, 0x46, 0x4f, 0x4c, 0x49, 0x4a,
     0x6b, 0x68, 0x6d, 0x6e, 0x67, 0x64, 0x61, 0x62, 0x73, 0x70, 0x75, 0x76, 0x7f, 0x7c, 0x79, 0x7a,
     0x3b, 0x38, 0x3d, 0x3e, 0x37, 0x34, 0x31, 0x32, 0x23, 0x20, 0x25, 0x26, 0x2f, 0x2c, 0x29, 0x2a,
-    0x0b, 0x08, 0x0d, 0x0e, 0x07, 0x04, 0x01, 0x02, 0x13, 0x10, 0x15, 0x16, 0x1f, 0x1c, 0x19, 0x1a};
+    0x0b, 0x08, 0x0d, 0x0e, 0x07, 0x04, 0x01, 0x02, 0x13, 0x10, 0x15, 0x16, 0x1f, 0x1c, 0x19, 0x1a };
 
-unsigned char rcon[256] = {
+const unsigned char rcon[256] = {
     0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a,
     0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39,
     0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a,
@@ -80,26 +80,30 @@ unsigned char rcon[256] = {
     0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04,
     0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63,
     0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd,
-    0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d};
+    0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d };
 
-void KeyExpansionCore(unsigned char *in, unsigned char i)
+void KeyExpansionCore(unsigned char* in, unsigned char i)
 {
     // Rotatie stanga
     // Simplifica
-    unsigned int *q = (unsigned int *)in;
+    unsigned int* q = (unsigned int*)in;
     *q = (*q >> 8) | ((*q & 0xff) << 24);
 
     // S-Box 4 bytes
-    thread i0(in[0] = s_box[in[0]]);
-    thread i1(in[1] = s_box[in[1]]);
-    thread i2(in[2] = s_box[in[2]]);
-    thread i3(in[3] = s_box[in[3]]);
+    thread i0([&]() {in[0] = s_box[in[0]]; });
+    thread i1([&]() {in[1] = s_box[in[1]]; });
+    thread i2([&]() {in[2] = s_box[in[2]]; });
+    thread i3([&]() {in[3] = s_box[in[3]]; });
+    i0.join();
+    i1.join();
+    i2.join();
+    i3.join();
 
     // RCon
     in[0] ^= rcon[i];
 }
 
-void expandareCheie(unsigned char *cheieOriginala, unsigned char *expKeys, unsigned nivel)
+void expandareCheie(unsigned char* cheieOriginala, unsigned char* expKeys, unsigned nivel)
 {
 
     // Nu functioneaza 256
@@ -113,10 +117,14 @@ void expandareCheie(unsigned char *cheieOriginala, unsigned char *expKeys, unsig
 
     while (bytesGenerati < lungimeCheieExpandata)
     {
-        temporar[0] = expKeys[bytesGenerati - 4];
-        temporar[1] = expKeys[bytesGenerati - 3];
-        temporar[2] = expKeys[bytesGenerati - 2];
-        temporar[3] = expKeys[bytesGenerati - 1];
+        thread tem0([&]() {temporar[0] = expKeys[bytesGenerati - 4]; });
+        thread tem1([&]() {temporar[1] = expKeys[bytesGenerati - 3]; });
+        thread tem2([&]() {temporar[2] = expKeys[bytesGenerati - 2]; });
+        thread tem3([&]() {temporar[3] = expKeys[bytesGenerati - 1]; });
+        tem0.join();
+        tem1.join();
+        tem2.join();
+        tem3.join();
         if (bytesGenerati % lungimeCheie == 0)
         {
             KeyExpansionCore(temporar, iteratii_rcon++);
@@ -124,10 +132,14 @@ void expandareCheie(unsigned char *cheieOriginala, unsigned char *expKeys, unsig
         // Numai pentru AES-256
         if (bytesGenerati % 32 == 16 && nivel == 256)
         {
-            temporar[0] = s_box[temporar[0]];
-            temporar[1] = s_box[temporar[1]];
-            temporar[2] = s_box[temporar[2]];
-            temporar[3] = s_box[temporar[3]];
+            thread te0([&]() {temporar[0] = s_box[temporar[0]]; });
+            thread te1([&]() {temporar[1] = s_box[temporar[1]]; });
+            thread te2([&]() {temporar[2] = s_box[temporar[2]]; });
+            thread te3([&]() {temporar[3] = s_box[temporar[3]]; });
+            te0.join();
+            te1.join();
+            te2.join();
+            te3.join();
         }
         expKeys[bytesGenerati++] = expKeys[bytesGenerati - lungimeCheie] ^ temporar[0];
         expKeys[bytesGenerati++] = expKeys[bytesGenerati - lungimeCheie] ^ temporar[1];
@@ -136,30 +148,46 @@ void expandareCheie(unsigned char *cheieOriginala, unsigned char *expKeys, unsig
     }
 }
 
-void SubstitutieBytes(unsigned char *state)
+void SubstitutieBytes(unsigned char* state)
 {
-    state[0] = s_box[state[0]];
-    state[1] = s_box[state[1]];
-    state[2] = s_box[state[2]];
-    state[3] = s_box[state[3]];
+    thread st0([&]() {state[0] = s_box[state[0]]; });
+    thread st1([&]() {state[1] = s_box[state[1]]; });
+    thread st2([&]() {state[2] = s_box[state[2]]; });
+    thread st3([&]() {state[3] = s_box[state[3]]; });
 
-    state[4] = s_box[state[4]];
-    state[5] = s_box[state[5]];
-    state[6] = s_box[state[6]];
-    state[7] = s_box[state[7]];
+    thread st4([&]() {state[4] = s_box[state[4]]; });
+    thread st5([&]() {state[5] = s_box[state[5]]; });
+    thread st6([&]() {state[6] = s_box[state[6]]; });
+    thread st7([&]() {state[7] = s_box[state[7]]; });
 
-    state[8] = s_box[state[8]];
-    state[9] = s_box[state[9]];
-    state[10] = s_box[state[10]];
-    state[11] = s_box[state[11]];
+    thread st8([&]() {state[8] = s_box[state[8]]; });
+    thread st9([&]() {state[9] = s_box[state[9]]; });
+    thread st10([&]() {state[10] = s_box[state[10]]; });
+    thread st11([&]() {state[11] = s_box[state[11]]; });
 
-    state[12] = s_box[state[12]];
-    state[13] = s_box[state[13]];
-    state[14] = s_box[state[14]];
-    state[15] = s_box[state[15]];
+    thread st12([&]() {state[12] = s_box[state[12]]; });
+    thread st13([&]() {state[13] = s_box[state[13]]; });
+    thread st14([&]() {state[14] = s_box[state[14]]; });
+    thread st15([&]() {state[15] = s_box[state[15]]; });
+    st0.join();
+    st1.join();
+    st2.join();
+    st3.join();
+    st4.join();
+    st5.join();
+    st6.join();
+    st7.join();
+    st8.join();
+    st9.join();
+    st10.join();
+    st11.join();
+    st12.join();
+    st13.join();
+    st14.join();
+    st15.join();
 }
 
-void ShiftRows(unsigned char *state)
+void ShiftRows(unsigned char* state)
 {
     swap(state[1], state[5]);
     swap(state[2], state[10]);
@@ -171,57 +199,89 @@ void ShiftRows(unsigned char *state)
     swap(state[11], state[15]);
 }
 
-void MixColumns(unsigned char *state)
+void MixColumns(unsigned char* state)
 {
     unsigned char temporar[16];
 
-    temporar[0] = (unsigned char)(mul2[state[0]] ^ mul3[state[1]] ^ state[2] ^ state[3]);
-    temporar[1] = (unsigned char)(state[0] ^ mul2[state[1]] ^ mul3[state[2]] ^ state[3]);
-    temporar[2] = (unsigned char)(state[0] ^ state[1] ^ mul2[state[2]] ^ mul3[state[3]]);
-    temporar[3] = (unsigned char)(mul3[state[0]] ^ state[1] ^ state[2] ^ mul2[state[3]]);
+    thread tem0([&]() {temporar[0] = (unsigned char)(mul2[state[0]] ^ mul3[state[1]] ^ state[2] ^ state[3]); });
+    thread tem1([&]() {temporar[1] = (unsigned char)(state[0] ^ mul2[state[1]] ^ mul3[state[2]] ^ state[3]); });
+    thread tem2([&]() {temporar[2] = (unsigned char)(state[0] ^ state[1] ^ mul2[state[2]] ^ mul3[state[3]]); });
+    thread tem3([&]() {temporar[3] = (unsigned char)(mul3[state[0]] ^ state[1] ^ state[2] ^ mul2[state[3]]); });
 
-    temporar[4] = (unsigned char)(mul2[state[4]] ^ mul3[state[5]] ^ state[6] ^ state[7]);
-    temporar[5] = (unsigned char)(state[4] ^ mul2[state[5]] ^ mul3[state[6]] ^ state[7]);
-    temporar[6] = (unsigned char)(state[4] ^ state[5] ^ mul2[state[6]] ^ mul3[state[7]]);
-    temporar[7] = (unsigned char)(mul3[state[4]] ^ state[5] ^ state[6] ^ mul2[state[7]]);
+    thread tem4([&]() {temporar[4] = (unsigned char)(mul2[state[4]] ^ mul3[state[5]] ^ state[6] ^ state[7]); });
+    thread tem5([&]() {temporar[5] = (unsigned char)(state[4] ^ mul2[state[5]] ^ mul3[state[6]] ^ state[7]); });
+    thread tem6([&]() {temporar[6] = (unsigned char)(state[4] ^ state[5] ^ mul2[state[6]] ^ mul3[state[7]]); });
+    thread tem7([&]() {temporar[7] = (unsigned char)(mul3[state[4]] ^ state[5] ^ state[6] ^ mul2[state[7]]); });
 
-    temporar[8] = (unsigned char)(mul2[state[8]] ^ mul3[state[9]] ^ state[10] ^ state[11]);
-    temporar[9] = (unsigned char)(state[8] ^ mul2[state[9]] ^ mul3[state[10]] ^ state[11]);
-    temporar[10] = (unsigned char)(state[8] ^ state[9] ^ mul2[state[10]] ^ mul3[state[11]]);
-    temporar[11] = (unsigned char)(mul3[state[8]] ^ state[9] ^ state[10] ^ mul2[state[11]]);
+    thread tem8([&]() {temporar[8] = (unsigned char)(mul2[state[8]] ^ mul3[state[9]] ^ state[10] ^ state[11]); });
+    thread tem9([&]() {temporar[9] = (unsigned char)(state[8] ^ mul2[state[9]] ^ mul3[state[10]] ^ state[11]); });
+    thread tem10([&]() {temporar[10] = (unsigned char)(state[8] ^ state[9] ^ mul2[state[10]] ^ mul3[state[11]]); });
+    thread tem11([&]() {temporar[11] = (unsigned char)(mul3[state[8]] ^ state[9] ^ state[10] ^ mul2[state[11]]); });
 
-    temporar[12] = (unsigned char)(mul2[state[12]] ^ mul3[state[13]] ^ state[14] ^ state[15]);
-    temporar[13] = (unsigned char)(state[12] ^ mul2[state[13]] ^ mul3[state[14]] ^ state[15]);
-    temporar[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]);
-    temporar[15] = (unsigned char)(mul3[state[12]] ^ state[13] ^ state[14] ^ mul2[state[15]]);
+    thread tem12([&]() {temporar[12] = (unsigned char)(mul2[state[12]] ^ mul3[state[13]] ^ state[14] ^ state[15]); });
+    thread tem13([&]() {temporar[13] = (unsigned char)(state[12] ^ mul2[state[13]] ^ mul3[state[14]] ^ state[15]); });
+    thread tem14([&]() {temporar[14] = (unsigned char)(state[12] ^ state[13] ^ mul2[state[14]] ^ mul3[state[15]]); });
+    thread tem15([&]() {temporar[15] = (unsigned char)(mul3[state[12]] ^ state[13] ^ state[14] ^ mul2[state[15]]); });
+    tem0.join();
+    tem1.join();
+    tem2.join();
+    tem3.join();
+    tem4.join();
+    tem5.join();
+    tem6.join();
+    tem7.join();
+    tem8.join();
+    tem9.join();
+    tem10.join();
+    tem11.join();
+    tem12.join();
+    tem13.join();
+    tem14.join();
+    tem15.join();
 
     memcpy(state, &temporar, sizeof(temporar));
 }
 
-void AddRoundKey(unsigned char *state, unsigned char *roundKey)
+void AddRoundKey(unsigned char* state, unsigned char* roundKey)
 {
-    state[0] ^= roundKey[0];
-    state[1] ^= roundKey[1];
-    state[2] ^= roundKey[2];
-    state[3] ^= roundKey[3];
+    thread st0([&]() {state[0] ^= roundKey[0]; });
+    thread st1([&]() {state[1] ^= roundKey[1]; });
+    thread st2([&]() {state[2] ^= roundKey[2]; });
+    thread st3([&]() {state[3] ^= roundKey[3]; });
 
-    state[4] ^= roundKey[4];
-    state[5] ^= roundKey[5];
-    state[6] ^= roundKey[6];
-    state[7] ^= roundKey[7];
+    thread st4([&]() {state[4] ^= roundKey[4]; });
+    thread st5([&]() {state[5] ^= roundKey[5]; });
+    thread st6([&]() {state[6] ^= roundKey[6]; });
+    thread st7([&]() {state[7] ^= roundKey[7]; });
 
-    state[8] ^= roundKey[8];
-    state[9] ^= roundKey[9];
-    state[10] ^= roundKey[10];
-    state[11] ^= roundKey[11];
+    thread st8([&]() {state[8] ^= roundKey[8]; });
+    thread st9([&]() {state[9] ^= roundKey[9]; });
+    thread st10([&]() {state[10] ^= roundKey[10]; });
+    thread st11([&]() {state[11] ^= roundKey[11]; });
 
-    state[12] ^= roundKey[12];
-    state[13] ^= roundKey[13];
-    state[14] ^= roundKey[14];
-    state[15] ^= roundKey[15];
+    thread st12([&]() {state[12] ^= roundKey[12]; });
+    thread st13([&]() {state[13] ^= roundKey[13]; });
+    thread st14([&]() {state[14] ^= roundKey[14]; });
+    thread st15([&]() {state[15] ^= roundKey[15]; });
+    st0.join();
+    st1.join();
+    st2.join();
+    st3.join();
+    st4.join();
+    st5.join();
+    st6.join();
+    st7.join();
+    st8.join();
+    st9.join();
+    st10.join();
+    st11.join();
+    st12.join();
+    st13.join();
+    st14.join();
+    st15.join();
 }
 
-void criptareMesaj(unsigned char *mesaj, unsigned char *cheie, unsigned char *expKeys, unsigned nivel)
+void criptareMesaj(unsigned char* mesaj, unsigned char* cheie, unsigned char* expKeys, unsigned nivel)
 {
     int numarRunde = 9;
     if (nivel == 128)
@@ -273,18 +333,18 @@ void PrintHex(unsigned char x)
     }
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     fstream f("mesaj.txt", ios::in | ios::out | ios::ate);
     unsigned char mesaj[17];
-    unsigned nivel = atoi(argv[1]);
-    unsigned char *cheie = nullptr;
-    unsigned char *expKeys = nullptr;
+    unsigned nivel = 256;//atoi(argv[1]);
+    unsigned char* cheie = nullptr;
+    unsigned char* expKeys = nullptr;
 
     unsigned size = 0;
     size = f.tellg();
-    unsigned restMesaj=size % 16;
-    size+=restMesaj;
+    unsigned restMesaj = size % 16;
+    size += restMesaj;
     if (nivel == 128)
     {
         cheie = new unsigned char[16];
@@ -304,14 +364,14 @@ int main(int argc, char **argv)
         expKeys = new unsigned char[240];
     }
     expandareCheie(cheie, expKeys, nivel);
-    
+
 
     f.seekp(ios::beg);
     for (int i = 0; i < size / 16; ++i)
     {
-        f.read((char *)mesaj, 16);
-        if(size / 16 - i==1){
-            for(int ii=15;ii>=restMesaj;ii--){
+        f.read((char*)mesaj, 16);
+        if (size / 16 - i == 1) {
+            for (int ii = 15; ii >= restMesaj; ii--) {
                 mesaj[ii] = 0;
             }
         }
