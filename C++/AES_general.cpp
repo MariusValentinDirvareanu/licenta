@@ -275,25 +275,25 @@ int main(int argc, char **argv)
     size += restMesaj;
     if (nivel == 128)
     {
-        cheie = new unsigned char[16];
-        memcpy(cheie, "u43x2l6gjng24edf", 16);
-        expKeys = new unsigned char[176];
+        cheie = new unsigned char[17];
+        memcpy(cheie, "u43x2l6gjng24edf\0", 17);
+        expKeys = new unsigned char[177];
     }
     if (nivel == 192)
     {
-        cheie = new unsigned char[24];
-        memcpy(cheie, "pyehxfiikibqunkkbwyydlqq", 24);
-        expKeys = new unsigned char[208];
+        cheie = new unsigned char[25];
+        memcpy(cheie, "pyehxfiikibqunkkbwyydlqq\0", 25);
+        expKeys = new unsigned char[209];
     }
     if (nivel == 256)
     {
-        cheie = new unsigned char[32];
-        memcpy(cheie, "bstipsymvkpascpmdqahvtdwusnhzexv", 32);
-        expKeys = new unsigned char[240];
+        cheie = new unsigned char[33];
+        memcpy(cheie, "bstipsymvkpascpmdqahvtdwusnhzexv\0", 33);
+        expKeys = new unsigned char[241];
     }
     KeyExpansion(cheie, expKeys, nivel);
 
-    f.seekp(ios::beg);
+    f.seekg(ios::beg);
     for (int i = 0; i < size / 16; ++i)
     {
         f.read((char *)mesaj, 16);
